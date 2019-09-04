@@ -25,7 +25,10 @@
   },
   "homepage": "https://github.com/Ahmed-osama/products-rest#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "morgan": "^1.9.1",
     "nodemon": "^1.19.2"
   }
 }
