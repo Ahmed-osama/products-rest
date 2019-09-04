@@ -1,0 +1,1 @@
+module.exports.DB_URL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@products-rest-db-9kdlj.mongodb.net/test?retryWrites=true&w=majority`

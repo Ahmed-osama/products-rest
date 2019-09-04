@@ -3,12 +3,15 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
+const mongoose = require('mongoose')
+const { DB_URL } = require('./constants')
 
-
+mongoose.connect(DB_URL, { useNewUrlParser: true })
 const app = express();
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({
     extended: false,
+    useMongoClient: true
 }))
 app.use(bodyParser.json())
 app.use('/products', productRoutes)
