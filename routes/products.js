@@ -8,8 +8,13 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
+    const product = {
+        product: req.body.productId,
+        price: req.body.price
+    }
     res.status(201).json({
-        message: "post product to products"
+        message: "post product to products",
+        product,
     })
 })
 
