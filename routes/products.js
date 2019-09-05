@@ -4,13 +4,30 @@ const Product = require('./../models/product');
 const {
     onSucess,
     onError
-} = require('./../utils/server.utils');
+} = require('./../utils/server.utils')
+
 const router = express.Router();
+
 router.get('/', (req, response, next) => {
     Product
         .find()
+        .select('name price _id')
         .exec()
-        .then(result => onSucess(response, result))
+        .then(result => {
+            const products = result.map(({ name, price, _id }) => {
+                return {
+                    name,
+                    price,
+                    _id,
+                    request: {
+                        method: 'GET',
+                        url: `${req.get('host')}${req.baseUrl}/${_id}`,
+
+                    }
+                }
+            })
+            onSucess(response, products)
+        })
         .catch(error => onError(response, error))
 
 })
@@ -18,7 +35,17 @@ router.get('/', (req, response, next) => {
 router.post('/', (req, response, next) => {
     const product = createProduct(req.body)
     product.save().then(
-        result => onSucess(response, result)
+        result => {
+            const product = {
+                ...result,
+                request: {
+                    method: 'GET',
+                    url: `${req.get('host')}${req.baseUrl}/${result._id}`,
+
+                }
+            }
+            onSucess(response, product)
+        }
     ).catch(error => onError(response, error))
 
 })
@@ -32,7 +59,29 @@ router.get('/:productId', (req, response, next) => {
                     message: 'not found product with the this id :' + productId
                 })
             }
-            onSucess(response, result)
+            console.log(result)
+            const product = {
+                name: result.name,
+                price: result.price,
+                request: [
+                    {
+                        method: 'DELETE',
+                        url: `${req.get('host')}${req.baseUrl}/${result._id}`,
+
+                    },
+                    {
+                        method: ['POST', 'PATCH'],
+                        url: `${req.get('host')}${req.baseUrl}`,
+                        body: {
+                            name: "String",
+                            price: "Number",
+                        }
+
+                    },
+                ]
+            }
+
+            onSucess(response, product)
         }
     ).catch(error => {
         onError(response, error)
@@ -49,7 +98,29 @@ router.patch('/:productId', (req, response, next) => {
 
         })
         .exec()
-        .then(result => onSucess(response, result))
+        .then(result => {
+            const product = {
+                name: result.name,
+                price: result.price,
+                request: [
+                    {
+                        method: ['DELETE', 'GET'],
+                        url: `${req.get('host')}${req.baseUrl}/${result._id}`,
+
+                    },
+                    {
+                        method: 'POST',
+                        url: `${req.get('host')}${req.baseUrl}`,
+                        body: {
+                            name: "String",
+                            price: "Number",
+                        }
+
+                    },
+                ]
+            }
+            onSucess(response, product)
+        })
         .catch(error => onError(response, error))
 })
 
@@ -59,7 +130,29 @@ router.delete('/:productId', (req, response, next) => {
     Product
         .deleteOne({ _id })
         .exec()
-        .then(result => onSucess(response, result))
+        .then(result => {
+            const product = {
+                name: result.name,
+                price: result.price,
+                request: [
+                    {
+                        method: 'GET',
+                        url: `${req.get('host')}${req.baseUrl}/${result._id}`,
+
+                    },
+                    {
+                        method: ['POST', 'PATCH'],
+                        url: `${req.get('host')}${req.baseUrl}`,
+                        body: {
+                            name: "String",
+                            price: "Number",
+                        }
+
+                    },
+                ]
+            }
+            onSucess(response, result)
+        })
         .catch(error => onError(response, error))
 })
 

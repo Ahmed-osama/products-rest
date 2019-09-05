@@ -26,13 +26,14 @@ app.use((req, res, next) => {
     }
 
 })
+
 app.use((req, res, next) => {
     const error = new Error(req.url + ' is Not Found');
     res.status = 404;
     next(error)
 })
-app.use((err, req, res, next) => {
 
+app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.json({
         error: {
@@ -42,4 +43,5 @@ app.use((err, req, res, next) => {
     })
     next(error)
 })
+
 module.exports = app
