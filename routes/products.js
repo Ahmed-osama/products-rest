@@ -59,7 +59,6 @@ router.get('/:productId', (req, response, next) => {
                     message: 'not found product with the this id :' + productId
                 })
             }
-            console.log(result)
             const product = {
                 name: result.name,
                 price: result.price,
