@@ -42,6 +42,7 @@ router.get('/', (req, response, next) => {
 router.post('/', (req, response, next) => {
     Product
         .findById(req.body.productId)
+
         .then(product => {
             console.log(product)
             if (!product) {
@@ -79,6 +80,8 @@ router.get('/:orderId', (req, response, next) => {
     const orderId = req.params.orderId
     Order
         .findById(orderId)
+        .select('_id product quantity')
+        .populate('product', 'name price')
         .exec()
         .then(result => {
             if (!result) {
