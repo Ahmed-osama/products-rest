@@ -1,45 +1,140 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const Order = require('./../models/order');
+const Product = require('./../models/product');
+const { createOrder } = require('../utils/order.utils')
+
+const {
+    onSucess,
+    onError
+} = require('./../utils/server.utils')
+
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-    res.status(200).json({
-        message: "get all orders"
-    })
+router.get('/', (req, response, next) => {
+    Order
+        .find()
+        .exec()
+        .then(result => {
+            const MappedResult = {
+                request: {
+                    method: "POST",
+                    url: `${req.get('host')}${req.baseUrl}`,
+                    body: {
+                        productId: "String",
+                        quantity: "Number",
+                    }
+                },
+                length: result.length,
+                orders: result.map(({ _id, product, quantity }) => ({
+                    _id, product, quantity,
+                    request: {
+                        method: "GET",
+                        url: `${req.get('host')}${req.baseUrl}/${_id}`
+                    }
+                }))
+            }
+            onSucess(response, MappedResult)
+        })
+        .catch(error => onError(response, error))
 })
 
-router.post('/', (req, res, next) => {
-    const order = {
-        product: req.body.productId,
-        quantity: req.body.quantity
-    }
-    res.status(201).json({
-        message: "post order to orders",
-        order
-    })
+router.post('/', (req, response, next) => {
+    Product
+        .findById(req.body.productId)
+        .then(product => {
+            console.log(product)
+            if (!product) {
+                throw {
+                    message: `can't find product of id: ${req.body.productId}`,
+                    status: 404
+                }
+            }
+            const order = createOrder(req.body)
+            return order.save()
+        })
+        .then(({ _id }) => {
+            const mappedResult = {
+                message: 'order created sucessfully!',
+                request: [{
+                    method: "PATCH",
+                    url: `${req.get('host')}${req.baseUrl}/${_id}`,
+                    body: {
+                        productId: "String",
+                        quantity: "Number",
+                    }
+                }, {
+                    method: "GET",
+                    url: `${req.get('host')}${req.baseUrl}/${_id}`,
+
+                }]
+            }
+            onSucess(response, mappedResult)
+        })
+        .catch(error => onError(response, error, error.status))
+
 })
 
-router.get('/:orderId', (req, res, next) => {
+router.get('/:orderId', (req, response, next) => {
     const orderId = req.params.orderId
-    res.status(200).json({
-        message: "get order by id",
-        orderId
-    })
+    Order
+        .findById(orderId)
+        .exec()
+        .then(result => {
+            if (!result) {
+                throw { message: 'can\'t find order of id:' + orderId, status: 404 }
+            }
+            onSucess(response, result)
+        })
+        .catch(error => onError(response, error, error.status))
 })
 
-router.patch('/:orderId', (req, res, next) => {
-    const orderId = req.params.orderId
-    res.status(200).json({
-        message: "patch order by id",
-        orderId
-    })
+router.patch('/:orderId', (req, response, next) => {
+    const _id = req.params.orderId
+    Order
+        .updateOne({ _id }, {
+            $set: req.body
+        })
+        .then(() => {
+            const mappedResult = {
+                message: 'order has been updated!',
+                request: {
+                    method: "GET",
+                    url: `${req.get('host')}${req.baseUrl}/${_id}`,
+                }
+            }
+            onSucess(response, mappedResult)
+        })
+        .catch(error => onError(response, error))
 })
 
-router.delete('/:orderId', (req, res, next) => {
-    const orderId = req.params.orderId
-    res.status(200).json({
-        message: "delete order by id",
-        orderId
-    })
+router.delete('/:orderId', (req, response, next) => {
+    const _id = req.params.orderId
+    Order
+        .deleteOne({ _id })
+        .then(() => {
+            const mappedResult = {
+                message: 'order has been deleted!',
+                request: [
+                    {
+                        method: "POST",
+                        url: `${req.get('host')}${req.baseUrl}`,
+                        body: {
+                            productId: "String",
+                            quantity: "String",
+                        }
+                    },
+                    {
+                        method: "GET",
+                        url: `${req.get('host')}${req.baseUrl}`,
+
+                    },
+
+                ]
+            }
+            onSucess(response, mappedResult)
+        })
+        .catch(error => onError(response, error))
 })
 
 module.exports = router

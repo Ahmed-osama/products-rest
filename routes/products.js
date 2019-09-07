@@ -1,5 +1,6 @@
 const express = require('express');
 const { createProduct } = require('./../utils/product.utils')
+const mongoose = require('mongoose');
 const Product = require('./../models/product');
 const {
     onSucess,
@@ -26,7 +27,16 @@ router.get('/', (req, response, next) => {
                     }
                 }
             })
-            onSucess(response, products)
+            onSucess(response, {
+                request: {
+                    method: 'POST',
+                    url: `${req.get('host')}${req.baseUrl}`,
+                    body: {
+                        name: "String",
+                        price: "Number",
+                    }
+                }, products
+            })
         })
         .catch(error => onError(response, error))
 
@@ -37,7 +47,7 @@ router.post('/', (req, response, next) => {
     product.save().then(
         result => {
             const product = {
-                ...result,
+                ...result._doc,
                 request: {
                     method: 'GET',
                     url: `${req.get('host')}${req.baseUrl}/${result._id}`,
@@ -60,6 +70,7 @@ router.get('/:productId', (req, response, next) => {
                 })
             }
             const product = {
+                _id: result._id,
                 name: result.name,
                 price: result.price,
                 request: [
@@ -69,8 +80,8 @@ router.get('/:productId', (req, response, next) => {
 
                     },
                     {
-                        method: ['POST', 'PATCH'],
-                        url: `${req.get('host')}${req.baseUrl}`,
+                        method: 'PATCH',
+                        url: `${req.get('host')}${req.baseUrl}/${result._id}`,
                         body: {
                             name: "String",
                             price: "Number",
@@ -94,17 +105,15 @@ router.patch('/:productId', (req, response, next) => {
     Product
         .updateOne({ _id }, {
             $set: body
-
         })
         .exec()
-        .then(result => {
+        .then(() => {
             const product = {
-                name: result.name,
-                price: result.price,
+                message: 'Product has been updated!',
                 request: [
                     {
                         method: ['DELETE', 'GET'],
-                        url: `${req.get('host')}${req.baseUrl}/${result._id}`,
+                        url: `${req.get('host')}${req.baseUrl}/${_id}`,
 
                     },
                     {
@@ -131,8 +140,7 @@ router.delete('/:productId', (req, response, next) => {
         .exec()
         .then(result => {
             const product = {
-                name: result.name,
-                price: result.price,
+                message: 'Product was deleted!',
                 request: [
                     {
                         method: 'GET',
@@ -150,7 +158,7 @@ router.delete('/:productId', (req, response, next) => {
                     },
                 ]
             }
-            onSucess(response, result)
+            onSucess(response, product)
         })
         .catch(error => onError(response, error))
 })

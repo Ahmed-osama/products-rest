@@ -1,8 +1,15 @@
 const mongoose = require('mongoose');
-const productSchema = mongoose.Schema({
+const orderSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    name: String,
-    price: Number,
+    product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'product',
+        required: true
+    },
+    quantity: {
+        type: Number,
+        default: 1
+    }
 })
 
-module.exports = mongoose.model('Product', productSchema)
+module.exports = mongoose.model('Order', orderSchema)
