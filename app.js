@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({
     useMongoClient: true
 }))
 app.use(bodyParser.json())
+app.use('/uploads', express.static('uploads'))
 app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
 

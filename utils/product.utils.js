@@ -3,10 +3,11 @@
 const mongoose = require('mongoose');
 const Product = require('./../models/product');
 
-const createProduct = product => new Product({
+const createProduct = req => new Product({
     _id: new mongoose.Types.ObjectId(),
-    name: product.name,
-    price: product.price
+    name: req.body.name,
+    price: req.body.price,
+    productImage: req.file.path,
 })
 
 module.exports = {

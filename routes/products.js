@@ -1,25 +1,50 @@
 const express = require('express');
 const { createProduct } = require('./../utils/product.utils')
-const mongoose = require('mongoose');
+const multer = require('multer')
 const Product = require('./../models/product');
+
 const {
     onSucess,
     onError
 } = require('./../utils/server.utils')
 
 const router = express.Router();
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${new Date().toISOString()}-${file.originalname}`)
+    },
+})
+const fileFilter = (req, file, cb) => {
+    if (['image/jpeg', 'image/png'].includes(file.mimetype)) {
+        cb(null, true)
+    } else {
+        cb(new Error('invalid file type'), false)
+    }
 
+}
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 2,
+
+    },
+    fileFilter
+})
 router.get('/', (req, response, next) => {
     Product
         .find()
-        .select('name price _id')
+        .select('name price _id productImage')
         .exec()
         .then(result => {
-            const products = result.map(({ name, price, _id }) => {
+            const products = result.map(({ name, price, _id, productImage }) => {
                 return {
                     name,
                     price,
                     _id,
+                    productImage,
                     request: {
                         method: 'GET',
                         url: `${req.get('host')}${req.baseUrl}/${_id}`,
@@ -42,12 +67,14 @@ router.get('/', (req, response, next) => {
 
 })
 
-router.post('/', (req, response, next) => {
-    const product = createProduct(req.body)
+router.post('/', upload.single('productImage'), (req, response, next) => {
+    const product = createProduct(req)
+
     product.save().then(
         result => {
             const product = {
                 ...result._doc,
+
                 request: {
                     method: 'GET',
                     url: `${req.get('host')}${req.baseUrl}/${result._id}`,
