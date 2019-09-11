@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
+const userRoutes = require('./routes/user');
 const mongoose = require('mongoose')
 const { DB_URL } = require('./constants')
 
@@ -17,6 +18,7 @@ app.use(bodyParser.json())
 app.use('/uploads', express.static('uploads'))
 app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
+app.use('/users', userRoutes)
 
 app.use((req, res, next) => {
     res.header('Acess-Control-Allow-Origin', '*');

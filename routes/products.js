@@ -2,7 +2,6 @@ const express = require('express');
 const { createProduct } = require('./../utils/product.utils')
 const multer = require('multer')
 const Product = require('./../models/product');
-
 const {
     onSucess,
     onError
@@ -23,7 +22,6 @@ const fileFilter = (req, file, cb) => {
     } else {
         cb(new Error('invalid file type'), false)
     }
-
 }
 const upload = multer({
     storage: storage,
@@ -74,11 +72,9 @@ router.post('/', upload.single('productImage'), (req, response, next) => {
         result => {
             const product = {
                 ...result._doc,
-
                 request: {
                     method: 'GET',
                     url: `${req.get('host')}${req.baseUrl}/${result._id}`,
-
                 }
             }
             onSucess(response, product)
