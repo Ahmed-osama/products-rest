@@ -1,4 +1,5 @@
 const express = require('express');
+const { verifyAuth } = require('./../middleware/check-auth')
 const { createProduct } = require('./../utils/product.utils')
 const multer = require('multer')
 const Product = require('./../models/product');
@@ -65,7 +66,7 @@ router.get('/', (req, response, next) => {
 
 })
 
-router.post('/', upload.single('productImage'), (req, response, next) => {
+router.post('/', verifyAuth, upload.single('productImage'), (req, response, next) => {
     const product = createProduct(req)
 
     product.save().then(
@@ -122,7 +123,7 @@ router.get('/:productId', (req, response, next) => {
 
 })
 
-router.patch('/:productId', (req, response, next) => {
+router.patch('/:productId', verifyAuth, (req, response, next) => {
     const _id = req.params.productId
     const body = req.body
     Product
@@ -155,7 +156,7 @@ router.patch('/:productId', (req, response, next) => {
         .catch(error => onError(response, error))
 })
 
-router.delete('/:productId', (req, response, next) => {
+router.delete('/:productId', verifyAuth, (req, response, next) => {
     const _id = req.params.productId
 
     Product

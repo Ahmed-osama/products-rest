@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const { verifyAuth } = require('./../middleware/check-auth')
 const Order = require('./../models/order');
 const Product = require('./../models/product');
 const { createOrder } = require('../utils/order.utils')
@@ -11,7 +11,7 @@ const {
 
 const router = express.Router();
 
-router.get('/', (req, response, next) => {
+router.get('/', verifyAuth, (req, response, next) => {
     Order
         .find()
         .exec()
@@ -39,7 +39,7 @@ router.get('/', (req, response, next) => {
         .catch(error => onError(response, error))
 })
 
-router.post('/', (req, response, next) => {
+router.post('/', verifyAuth, (req, response, next) => {
     Product
         .findById(req.body.productId)
 
@@ -75,7 +75,7 @@ router.post('/', (req, response, next) => {
 
 })
 
-router.get('/:orderId', (req, response, next) => {
+router.get('/:orderId', verifyAuth, (req, response, next) => {
     const orderId = req.params.orderId
     Order
         .findById(orderId)
@@ -91,7 +91,7 @@ router.get('/:orderId', (req, response, next) => {
         .catch(error => onError(response, error, error.status))
 })
 
-router.patch('/:orderId', (req, response, next) => {
+router.patch('/:orderId', verifyAuth, (req, response, next) => {
     const _id = req.params.orderId
     Order
         .updateOne({ _id }, {
@@ -110,7 +110,7 @@ router.patch('/:orderId', (req, response, next) => {
         .catch(error => onError(response, error))
 })
 
-router.delete('/:orderId', (req, response, next) => {
+router.delete('/:orderId', verifyAuth, (req, response, next) => {
     const _id = req.params.orderId
     Order
         .deleteOne({ _id })
