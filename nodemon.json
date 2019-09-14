@@ -1,6 +1,7 @@
 {
     "env": {
         "DB_USER": "rest-products-app",
-        "DB_PW": "rest-products-app"
+        "DB_PW": "rest-products-app",
+        "JWT_KEY": "jwtkeyfortheproductapp"
     }
 }

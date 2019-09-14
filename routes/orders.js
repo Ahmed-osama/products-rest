@@ -44,7 +44,6 @@ router.post('/', (req, response, next) => {
         .findById(req.body.productId)
 
         .then(product => {
-            console.log(product)
             if (!product) {
                 throw {
                     message: `can't find product of id: ${req.body.productId}`,
