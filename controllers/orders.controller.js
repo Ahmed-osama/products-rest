@@ -1,6 +1,6 @@
 
-const Order = require('./../models/order');
-const Product = require('./../models/product');
+const Order = require('../models/order.model');
+const Product = require('../models/product.model');
 const { createOrder } = require('../utils/order.utils')
 
 const {

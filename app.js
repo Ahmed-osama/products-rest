@@ -1,9 +1,9 @@
 const express = require('express');
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
-const productRoutes = require('./routes/products');
-const orderRoutes = require('./routes/orders');
-const userRoutes = require('./routes/user');
+const productRoutes = require('./routes/products.route');
+const orderRoutes = require('./routes/orders.route');
+const userRoutes = require('./routes/user.route');
 const mongoose = require('mongoose')
 const { DB_URL } = require('./constants')
 
@@ -27,7 +27,6 @@ app.use((req, res, next) => {
         res.header('Acess-Control-Allow-Methods', 'POST, PUT, PATCH, DELETE, GET')
         return res.status(200).json({})
     }
-
 })
 
 app.use((req, res, next) => {
