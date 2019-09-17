@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const User = require('./../models/user');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { verifyAuth } = require('./../middleware/check-auth')
+const verifyAuth = require('./../middleware/auth.mw')
 const { isAuth } = require('./../utils/login.utils')
 const {
     onSucess,
