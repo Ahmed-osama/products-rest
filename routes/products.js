@@ -66,9 +66,8 @@ router.get('/', (req, response, next) => {
 
 })
 
-router.post('/', verifyAuth, upload.single('productImage'), (req, response, next) => {
+router.post('/', upload.single('productImage'), verifyAuth, (req, response, next) => {
     const product = createProduct(req)
-
     product.save().then(
         result => {
             const product = {
@@ -165,22 +164,14 @@ router.delete('/:productId', verifyAuth, (req, response, next) => {
         .then(result => {
             const product = {
                 message: 'Product was deleted!',
-                request: [
-                    {
-                        method: 'GET',
-                        url: `${req.get('host')}${req.baseUrl}/${result._id}`,
-
-                    },
-                    {
-                        method: ['POST', 'PATCH'],
-                        url: `${req.get('host')}${req.baseUrl}`,
-                        body: {
-                            name: "String",
-                            price: "Number",
-                        }
-
-                    },
-                ]
+                request: {
+                    method: 'POST',
+                    url: `${req.get('host')}${req.baseUrl}`,
+                    body: {
+                        name: "String",
+                        price: "Number",
+                    }
+                }
             }
             onSucess(response, product)
         })
