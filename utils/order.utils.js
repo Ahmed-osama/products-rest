@@ -1,7 +1,7 @@
 
 
 const mongoose = require('mongoose');
-const Order = require('./../models/order');
+const Order = require('../models/order.model');
 
 const createOrder = ({ productId, quantity = 1 }) => new Order({
     _id: new mongoose.Types.ObjectId(),

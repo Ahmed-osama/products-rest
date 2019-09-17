@@ -1,5 +1,5 @@
 const { createProduct } = require('./../utils/product.utils')
-const Product = require('./../models/product');
+const Product = require('../models/product.model');
 const {
   onSucess,
   onError
