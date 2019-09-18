@@ -5,7 +5,7 @@
  * @param {Number} status 
  */
 const onSucess = (response, result, status = 200) => {
-    response.status(status).json(result)
+  response.status(status).json(result)
 }
 
 /**
@@ -15,10 +15,10 @@ const onSucess = (response, result, status = 200) => {
  * @param {Number} status 
  */
 const onError = (response, error, status = 500) => {
-    response.status(status).json({ error })
+  response.status(status).json({ error })
 }
 
 module.exports = {
-    onSucess,
-    onError
+  onSucess,
+  onError
 }

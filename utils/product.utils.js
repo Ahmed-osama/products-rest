@@ -8,12 +8,12 @@ const Product = require('../models/product.model');
  * @param {Object} req 
  */
 const createProduct = req => new Product({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    price: req.body.price,
-    productImage: req.file.path,
+  _id: new mongoose.Types.ObjectId(),
+  name: req.body.name,
+  price: req.body.price,
+  productImage: req.file.path,
 })
 
 module.exports = {
-    createProduct
+  createProduct
 }
