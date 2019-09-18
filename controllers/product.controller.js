@@ -4,6 +4,15 @@ const {
   onSucess,
   onError
 } = require('./../utils/server.utils')
+
+/**
+ * get all products as array
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Array<Object> }
+ */
+
 function getAllProducts(req, response, next) {
   Product
     .find()
@@ -38,6 +47,13 @@ function getAllProducts(req, response, next) {
 
 }
 
+/**
+ * creates new product
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Object }
+ */
 function addNewProduct(req, response, next) {
   const product = createProduct(req)
   product
@@ -56,6 +72,14 @@ function addNewProduct(req, response, next) {
     ).catch(error => onError(response, error))
 }
 
+
+/**
+ * gets single product by its id
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Object }
+ */
 function getSingleProduct(req, response, next) {
   const productId = req.params.productId
   Product.findById(productId).exec().then(
@@ -95,6 +119,13 @@ function getSingleProduct(req, response, next) {
 
 }
 
+/**
+ * updates single product by its id
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Object }
+ */
 function updateProduct(req, response, next) {
   const _id = req.params.productId
   const body = req.body
@@ -128,6 +159,13 @@ function updateProduct(req, response, next) {
     .catch(error => onError(response, error))
 }
 
+/**
+ * Deletes single product by its id
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Object }
+ */
 function deleteProduct(req, response, next) {
   const _id = req.params.productId
 

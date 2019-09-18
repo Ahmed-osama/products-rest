@@ -9,6 +9,14 @@ const {
   onError
 } = require('./../utils/server.utils')
 
+
+/**
+ * gets all users 
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Array<Object> }
+ */
 function getAllUsers(req, response, next) {
   User
     .find()
@@ -19,6 +27,13 @@ function getAllUsers(req, response, next) {
     .catch(error => onError(response, error))
 }
 
+/**
+ * create new user 
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Object }
+ */
 function signUp(req, response, next) {
   let password = new Promise((res, rej) => {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -46,6 +61,14 @@ function signUp(req, response, next) {
     .catch(error => onError(response, error))
 }
 
+
+/**
+ * signs user in and returns a valid token
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Object }
+ */
 function logIn(req, response, next) {
   User
     .find({ email: req.body.email })
@@ -76,6 +99,14 @@ function logIn(req, response, next) {
     .catch(error => onError(response, error))
 }
 
+
+/**
+ * Deletes a user by its id
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Object }
+ */
 function deleteUser(req, response, next) {
   const _id = req.params.userId
   User

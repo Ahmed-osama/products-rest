@@ -8,6 +8,13 @@ const {
     onError
 } = require('./../utils/server.utils')
 
+/**
+ * get all orders as array
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns {Array<Object>}
+ */
 function getAllOrders(req, response, next) {
     Order
         .find()
@@ -36,6 +43,14 @@ function getAllOrders(req, response, next) {
         .catch(error => onError(response, error))
 }
 
+
+/**
+ * creates new order
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns {Object}
+ */
 function createNewOrder(req, response, next) {
     Product
         .findById(req.body.productId)
@@ -72,6 +87,14 @@ function createNewOrder(req, response, next) {
 
 }
 
+
+/**
+ * get single order by id
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns {Object}
+ */
 function getSingleOrder(req, response, next) {
     const orderId = req.params.orderId
     Order
@@ -88,6 +111,14 @@ function getSingleOrder(req, response, next) {
         .catch(error => onError(response, error, error.status))
 }
 
+
+/**
+ * update sing order by its id
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Object }
+ */
 function updateSingleOrder(req, response, next) {
     const _id = req.params.orderId
     Order
@@ -107,6 +138,13 @@ function updateSingleOrder(req, response, next) {
         .catch(error => onError(response, error))
 }
 
+/**
+ * Delete singl order by its id
+ * @param {Object} req 
+ * @param {Object} response 
+ * @param {Function} next 
+ * @returns { Object }
+ */
 function deleteSingleOrder(req, response, next) {
     const _id = req.params.orderId
     Order

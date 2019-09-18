@@ -1,5 +1,12 @@
 const jwt = require('jsonwebtoken')
 const { onError } = require('./../utils/server.utils')
+
+/**
+ *  jwt verify middle ware
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {Function} next 
+ */
 module.exports = (req, res, next) => {
 
     try {
