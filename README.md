@@ -17,8 +17,11 @@ basic restful api using node.js &amp; express
 - provide product avilability
 - make orders as cart
 - unite test
+- implement payment using stripe
+- Passport Login system
 - google auth integration
 - facebook auth integration
+- email notfication and verification
 - Deploy now js
 - create client side upp
 - refine README.md file
